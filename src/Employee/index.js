@@ -40,7 +40,6 @@ class Employee extends Component{
 		else this.props.login(this.state.username, this.state.password)
 	}
 	render(){
-		console.log(this.state.manager, 'this is manager')
 		return(
 			<div>
 				<button className={this.state.registering ? "current" : null} className="button" onClick={this.registration}>Create new user</button>

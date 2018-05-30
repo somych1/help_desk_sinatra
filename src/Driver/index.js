@@ -34,8 +34,6 @@ class Driver extends Component{
 		else if (field == 'make') this.setState({ make: e.currentTarget.value });
 		else if (field == 'model') this.setState({ model: e.currentTarget.value });
 		else if (field == 'year') this.setState({ year: e.currentTarget.value });
-
-		// console.log(this.state.manager, 'this is manager')
 	}
 
 	handleSubmit = (e) => {
@@ -43,8 +41,8 @@ class Driver extends Component{
 		if(this.state.registering) this.props.register(this.state.name, this.state.username, this.state.password, this.state.truck, this.state.make, this.state.model, this.state.year)
 		else this.props.login(this.state.username, this.state.password)
 	}
+
 	render(){
-		console.log(this.state.manager, 'this is manager')
 		return(
 			<div>
 				<button className={this.state.registering ? "current" : null} className="button" onClick={this.registration}>Create new user</button>
