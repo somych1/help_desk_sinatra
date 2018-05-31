@@ -82,7 +82,13 @@ class DriverApp extends Component {
       })
     }
   }
-
+  homeButton = () => {
+    this.setState({
+      ordersIndex: true,
+      newOrder: false,
+      detail: false
+    })
+  }
   logout = async () => {
     const driverLogout = await fetch('http://localhost:9292/driver/logout', {
         method: 'GET'
@@ -167,7 +173,7 @@ class DriverApp extends Component {
       <div>
         { this.state.loggedIn ?
           <div>
-            <DriverNavigationBar createNewOrder={this.createNewOrder}/>
+            <DriverNavigationBar createNewOrder={this.createNewOrder} homeButton={this.homeButton}/>
             {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
               : <div>
                 {this.state.newOrder ? <CreateOrder createOrder={this.createOrder}/>

@@ -1,4 +1,8 @@
 import React, {Component} from "react";
+import EmployeeNavBar from '../EmployeeNavBar'
+import CreateOrder from '../CreateOrder'
+import OrdersIndex from '../OrdersIndex'
+import OrderDetail from '../OrderDetail'
 import Employee from '../Employee'
 
 
@@ -6,8 +10,15 @@ class EmployeeApp extends Component {
   constructor(){
     super(),
     this.state = {
+      orders: [],
+      manager: false,
       loggedIn: false,
       loginError: '',
+      ordersIndex: true,
+      newOrder: false,
+      detail: false,
+      drivers: [],
+      employees: []
     }
   }
   login = async (username, password) => {
@@ -23,7 +34,22 @@ class EmployeeApp extends Component {
     console.log(loginResponse, 'this is loginResponse')
     if(loginResponse.success){
       this.setState({
-        loggedIn: true
+        loggedIn: true,
+        ordersIndex: true,
+        newOrder: false,
+        detail: false
+      })
+      if(loginResponse.manager){
+        this.setState({
+          manager: true
+        })
+      }
+      this.getOrders()
+      .then((orders) => {
+        this.setState({orders: orders.order})
+      })
+      .catch((err) => {
+        console.log(err);
       })
     } else {
       this.setState({
@@ -47,7 +73,22 @@ class EmployeeApp extends Component {
     console.log(registrationResponse, 'this is registrationResponse')
     if(registrationResponse.success){
       this.setState({
-        loggedIn: true
+        loggedIn: true,
+        ordersIndex: true,
+        newOrder: false,
+        detail: false
+      })
+      if(registrationResponse.manager){
+        this.setState({
+          manager: true
+        })
+      }
+      this.getOrders()
+      .then((orders) => {
+        this.setState({orders: orders.order})
+      })
+      .catch((err) => {
+        console.log(err);
       })
     } else {
       this.setState({
@@ -65,10 +106,105 @@ class EmployeeApp extends Component {
       loggedIn: false
     })
   }
+  homeButton = () => {
+    this.setState({
+      ordersIndex: true,
+      newOrder: false,
+      detail: false
+    })
+  }
+  getOrders = async () => {
+    const allOrders = await fetch('http://localhost:9292/orders', {
+      method: 'GET',
+      credentials: 'include'
+    })
+    const orders = await allOrders.json()
+    console.log(orders, 'this is response in getOrders')
+    return orders
+  }
+  createNewOrder = () => {
+    this.state.newOrder ? this.setState({ordersIndex: true}) : this.setState({ordersIndex: false})
+    this.setState({
+      newOrder: !this.state.newOrder
+    })
+    this.getDrivers()
+    this.getEmployees()
+
+  }
+  getDrivers = async () => {
+    const allDrivers = await fetch('http://localhost:9292/driver', {
+      method: 'GET',
+      credentials: 'include'
+    })
+    const response = await allDrivers.json()
+    // console.log(response, 'this is allDrivers in getDrivers')
+    this.setState({
+      drivers: response.drivers
+    })
+  }
+
+  getEmployees = async () => {
+    const employees = await fetch('http://localhost:9292/emp', {
+      method: 'GET',
+      credentials: 'include'
+    })
+    const response = await employees.json()
+    this.setState({
+      employees: response.employees
+    })
+  }
+    
+  employeesList = () => {
+    const employees = this.state.employees.map((employee, i) => {
+      return(
+        <option key={employee.id} value={employee.id}>
+          {employee.name}
+        </option>
+      )
+    })
+    return employees
+  }
+
+  createOrder = async (title, description, truck, employee) => {
+    const newOrder = await fetch('http://localhost:9292/orders', {
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        driver_id: truck,
+        employee_id: employee
+      })
+    })
+    const response = await newOrder.json()
+    this.getOrders()
+      .then((orders) => {
+        this.setState({orders: orders.order})
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    this.createNewOrder()
+  }
+
   render() {
     return (
-      <div className="App">
-        <Employee login={this.login} register={this.register}/>
+      <div>
+        { this.state.loggedIn ?
+          <div>
+            <EmployeeNavBar createNewOrder={this.createNewOrder} homeButton={this.homeButton}/>
+            {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
+              : <div>
+                {this.state.newOrder ? <CreateOrder employeesList={this.employeesList} driversList={this.driversList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>
+                : <div>
+                  {this.state.detail ? <OrderDetail order={this.state.order} empName={this.state.empName}/> : null}
+                </div>
+                }
+              </div>
+            }
+          </div>
+          : <Employee login={this.login} register={this.register}/>
+        }
       </div>
     );
   }
