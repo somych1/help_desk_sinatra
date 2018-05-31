@@ -52,7 +52,6 @@ class Employee extends Component{
 					<input
             			name="manager"
            				type="checkbox"
-           				checked={this.state.isGoing}
             			onChange={this.handleInput} /></p><br />
 					<button className="button button-primary" type='submit'>Submit</button>
 				</form>

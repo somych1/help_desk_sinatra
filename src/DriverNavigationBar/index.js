@@ -3,17 +3,9 @@ import React, {Component} from "react";
 const DriverNavigationBar = (props) => {
 
 	return(
-		<div>
-			<div>
-				<button>Home</button>
-			</div>
-			<div>
-				<button onClick={props.createNewOrder}>Create New Order</button>
-			</div>
-			<div>
-			</div>
-			<div>
-			</div>
+		<div className='nav'>
+			<button>Home</button>
+			<button onClick={props.createNewOrder}>Create New Order</button>
 		</div>
 	)
 }
