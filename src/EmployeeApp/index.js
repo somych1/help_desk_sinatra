@@ -59,6 +59,7 @@ class EmployeeApp extends Component {
   }
 
   register = async (name, username, password, manager) => {
+    console.log(manager, 'this is manager in register route')
     const empRegister = await fetch('http://localhost:9292/emp/register', {
       method: 'POST',
       credentials: 'include',
@@ -155,6 +156,7 @@ class EmployeeApp extends Component {
   }
     
   employeesList = () => {
+    console.log(this.state.employees, 'this is employeeeeeeeeeeees')
     const employees = this.state.employees.map((employee, i) => {
       return(
         <option key={employee.id} value={employee.id}>
@@ -166,6 +168,7 @@ class EmployeeApp extends Component {
   }
 
   createOrder = async (title, description, truck, employee) => {
+    console.log(employee, 'this is employeeId in createOrder')
     const newOrder = await fetch('http://localhost:9292/orders', {
       method: 'POST',
       credentials: 'include',
@@ -192,7 +195,7 @@ class EmployeeApp extends Component {
       <div>
         { this.state.loggedIn ?
           <div>
-            <EmployeeNavBar createNewOrder={this.createNewOrder} homeButton={this.homeButton}/>
+            <EmployeeNavBar createNewOrder={this.createNewOrder} homeButton={this.homeButton} manager={this.state.manager}/>
             {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
               : <div>
                 {this.state.newOrder ? <CreateOrder employeesList={this.employeesList} driversList={this.driversList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>

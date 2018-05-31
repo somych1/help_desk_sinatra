@@ -55,7 +55,7 @@ class CreateOrder extends Component{
 						<input type='text' name='title' value={this.state.title} onChange={this.handleInput}/><br />
 						<label>Description</label>
 						<input ttpe='text' name='description' value={this.state.description} onChange={this.handleInput}/><br />
-						<label>Employee</label>
+						<label name='employee' onChange={this.handleInput}>Employee</label>
 						<select name='employee' onChange={this.handleInput}>
 							{employees}
 						</select><br />

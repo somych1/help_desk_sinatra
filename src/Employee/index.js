@@ -14,8 +14,7 @@ class Employee extends Component{
 	}
 	registration = () => {
 		this.setState({
-			registering: true,
-			manager: false
+			registering: true
 		})
 	}
 	login = () => {
@@ -24,22 +23,31 @@ class Employee extends Component{
 		})
 	}
 	handleInput = (e) => {
-		const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-		this.setState({ manager: value})
+		
 		const field = e.currentTarget.name
-		if(field == 'name') this.setState({ name: e.currentTarget.value })
-		else if (field == 'username') this.setState({ username: e.currentTarget.value })
-		else if (field == 'password') this.setState({ password: e.currentTarget.value });
 
-		// console.log(this.state.manager, 'this is manager')
+		if(field == 'name') {
+			this.setState({ name: e.currentTarget.value })
+		} else if (field == 'username') {
+			this.setState({ username: e.currentTarget.value })
+		} else if (field == 'password') {
+			this.setState({ password: e.currentTarget.value })
+		} else if (field == 'manager') {
+			this.setState({
+				manager: e.target.checked
+			})
+		}
+
 	}
 
 	handleSubmit = (e) => {
+		console.log(this.state.manager, 'this is manager in handleSubmit in employee')
 		e.preventDefault();
 		if(this.state.registering) this.props.register(this.state.name, this.state.username, this.state.password, this.state.manager)
 		else this.props.login(this.state.username, this.state.password)
 	}
 	render(){
+		console.log(this.state.manager, 'this is manager in render() in employee')
 		return(
 			<div>
 				<button className={this.state.registering ? "current" : null} className="button" onClick={this.registration}>Create new user</button>
@@ -48,11 +56,13 @@ class Employee extends Component{
 					<input className={this.state.registering ? null : 'hide'} type='text' name='name' placeholder='name' value={this.state.name} onChange={this.handleInput}/><br />
 					<input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.handleInput}/><br />
 					<input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleInput}/><br />
-					<p className={this.state.registering ? null : 'hide'}>Manager
+					<label className={this.state.registering ? null : 'hide'}>Manager
 					<input
             			name="manager"
            				type="checkbox"
-            			onChange={this.handleInput} /></p><br />
+           				checked={this.state.manager}
+            			onChange={this.handleInput} />
+            		</label><br />
 					<button className="button button-primary" type='submit'>Submit</button>
 				</form>
 				{this.props.loginError != '' ? <p>{this.props.loginError}</p> : null}
