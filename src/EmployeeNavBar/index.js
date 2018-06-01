@@ -8,7 +8,7 @@ const EmployeeNavBar = (props) => {
 		<div className='nav'>
 			<button onClick={props.homeButton}>Home</button>
 			<button onClick={props.createNewOrder}>Create New Order</button>
-			<button>Employees</button>
+			<button onClick={props.employeesIndex}>Employees</button>
 			<button>Trucks</button>
 			<button onClick={props.logout}>Logout</button>
 		</div>

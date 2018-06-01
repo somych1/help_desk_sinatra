@@ -4,6 +4,7 @@ import EmployeeOrderCreate from '../EmployeeOrderCreate'
 import OrdersIndex from '../OrdersIndex'
 import OrderDetail from '../OrderDetail'
 import Employee from '../Employee'
+import EmployeesIndex from '../EmployeesIndex'
 
 
 class EmployeeApp extends Component {
@@ -14,11 +15,12 @@ class EmployeeApp extends Component {
       manager: false,
       loggedIn: false,
       loginError: '',
+      drivers: [],
+      employees: [],
       ordersIndex: true,
       newOrder: false,
       detail: false,
-      drivers: [],
-      employees: []
+      employeesIndex: false
     }
   }
   login = async (username, password) => {
@@ -112,7 +114,8 @@ class EmployeeApp extends Component {
       newOrder: false,
       detail: false,
       drivers: [],
-      employees: []
+      employees: [],
+      employeesIndex: false
     })
   }
   homeButton = () => {
@@ -208,17 +211,33 @@ class EmployeeApp extends Component {
     this.createNewOrder()
   }
 
+  employeesIndex = () => {
+    this.getEmployees()
+    this.state.employeesIndex ? this.setState({ordersIndex: true}) : this.setState({
+      ordersIndex: false,
+      newOrder: false,
+      detail: false
+    })
+    this.setState({
+      employeesIndex: !this.state.employeesIndex
+    })
+  }
+
   render() {
     return (
       <div>
         { this.state.loggedIn ?
           <div>
-            <EmployeeNavBar logout={this.logout} createNewOrder={this.createNewOrder} homeButton={this.homeButton} manager={this.state.manager}/>
+            <EmployeeNavBar logout={this.logout} createNewOrder={this.createNewOrder} homeButton={this.homeButton} manager={this.state.manager} employeesIndex={this.employeesIndex}/>
             {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
               : <div>
                 {this.state.newOrder ? <EmployeeOrderCreate driversList={this.driversList} employeesList={this.employeesList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>
                 : <div>
-                  {this.state.detail ? <OrderDetail order={this.state.order} empName={this.state.empName}/> : null}
+                  {this.state.detail ? <OrderDetail order={this.state.order} empName={this.state.empName}/>
+                  : <div>
+                    {this.state.employeesIndex ? <EmployeesIndex employees={this.state.employees}/> : null}
+                  </div>
+                }
                 </div>
                 }
               </div>
