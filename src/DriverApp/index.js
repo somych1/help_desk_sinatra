@@ -31,7 +31,8 @@ class DriverApp extends Component {
         truck_num: truck,
         make: make,
         model: model,
-        yearL: year
+        yearL: year,
+        manager: false
       })
     })
     const registrationResponse = await driverRegister.json();
@@ -95,7 +96,14 @@ class DriverApp extends Component {
     });
     const logoutResponse = await driverLogout.json();
     this.setState({
-      loggedIn: false
+      empName: '',
+      order: [],
+      orders: [],
+      loggedIn: false,
+      loginError: '',
+      ordersIndex: true,
+      newOrder: false,
+      detail: false
     })
   }
 
@@ -173,10 +181,10 @@ class DriverApp extends Component {
       <div>
         { this.state.loggedIn ?
           <div>
-            <DriverNavigationBar createNewOrder={this.createNewOrder} homeButton={this.homeButton}/>
+            <DriverNavigationBar createNewOrder={this.createNewOrder} homeButton={this.homeButton} logout={this.logout}/>
             {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
               : <div>
-                {this.state.newOrder ? <CreateOrder createOrder={this.createOrder}/>
+                {this.state.newOrder ? <CreateOrder manager={this.state.manager} createOrder={this.createOrder}/>
                 : <div>
                   {this.state.detail ? <OrderDetail order={this.state.order} empName={this.state.empName}/> : null}
                 </div>

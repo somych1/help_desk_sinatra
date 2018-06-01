@@ -10,11 +10,12 @@ const EmployeeNavBar = (props) => {
 			<button onClick={props.createNewOrder}>Create New Order</button>
 			<button>Employees</button>
 			<button>Trucks</button>
+			<button onClick={props.logout}>Logout</button>
 		</div>
 		: 
 		<div className='nav'>
 			<button onClick={props.homeButton}>Home</button>
-			<button>Orders</button>
+			<button onClick={props.logout}>Logout</button>
 		</div>
 	)
 }

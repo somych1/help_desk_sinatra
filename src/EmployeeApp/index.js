@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import EmployeeNavBar from '../EmployeeNavBar'
-import CreateOrder from '../CreateOrder'
+import EmployeeOrderCreate from '../EmployeeOrderCreate'
 import OrdersIndex from '../OrdersIndex'
 import OrderDetail from '../OrderDetail'
 import Employee from '../Employee'
@@ -104,7 +104,15 @@ class EmployeeApp extends Component {
     });
     const logoutResponse = await empLogout.json();
     this.setState({
-      loggedIn: false
+      orders: [],
+      manager: false,
+      loggedIn: false,
+      loginError: '',
+      ordersIndex: true,
+      newOrder: false,
+      detail: false,
+      drivers: [],
+      employees: []
     })
   }
   homeButton = () => {
@@ -133,39 +141,49 @@ class EmployeeApp extends Component {
 
   }
   getDrivers = async () => {
-    const allDrivers = await fetch('http://localhost:9292/driver', {
-      method: 'GET',
-      credentials: 'include'
-    })
-    const response = await allDrivers.json()
-    // console.log(response, 'this is allDrivers in getDrivers')
-    this.setState({
-      drivers: response.drivers
-    })
-  }
+      const allDrivers = await fetch('http://localhost:9292/driver', {
+          method: 'GET',
+          credentials: 'include'
+      })
+      const response = await allDrivers.json()
+      console.log(response, 'this is allDrivers in getDrivers')
+      this.setState({
+          drivers: response.drivers
+      })
+    }
 
-  getEmployees = async () => {
-    const employees = await fetch('http://localhost:9292/emp', {
-      method: 'GET',
-      credentials: 'include'
-    })
-    const response = await employees.json()
-    this.setState({
-      employees: response.employees
-    })
-  }
-    
-  employeesList = () => {
-    console.log(this.state.employees, 'this is employeeeeeeeeeeees')
-    const employees = this.state.employees.map((employee, i) => {
+  driversList = () => {
+    const drivers = this.state.drivers.map((driver, i) => {
       return(
-        <option key={employee.id} value={employee.id}>
-          {employee.name}
+        <option key={driver.id} value={driver.id}>
+          {driver.truck_num}
         </option>
       )
     })
-    return employees
+    return drivers
   }
+  getEmployees = async () => {
+      const employees = await fetch('http://localhost:9292/emp', {
+          method: 'GET',
+          credentials: 'include'
+      })
+        const response = await employees.json()
+      this.setState({
+          employees: response.employees
+      })
+    }
+    
+    employeesList = () => {
+      console.log(this.state.employees, 'this is employeeeeeeeeeeees')
+      const employees = this.state.employees.map((employee, i) => {
+        return(
+          <option key={employee.id} value={employee.id}>
+            {employee.name}
+          </option>
+        )
+      })
+      return employees
+    }
 
   createOrder = async (title, description, truck, employee) => {
     console.log(employee, 'this is employeeId in createOrder')
@@ -195,10 +213,10 @@ class EmployeeApp extends Component {
       <div>
         { this.state.loggedIn ?
           <div>
-            <EmployeeNavBar createNewOrder={this.createNewOrder} homeButton={this.homeButton} manager={this.state.manager}/>
+            <EmployeeNavBar logout={this.logout} createNewOrder={this.createNewOrder} homeButton={this.homeButton} manager={this.state.manager}/>
             {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
               : <div>
-                {this.state.newOrder ? <CreateOrder employeesList={this.employeesList} driversList={this.driversList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>
+                {this.state.newOrder ? <EmployeeOrderCreate driversList={this.driversList} employeesList={this.employeesList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>
                 : <div>
                   {this.state.detail ? <OrderDetail order={this.state.order} empName={this.state.empName}/> : null}
                 </div>
