@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 class CreateOrder extends Component{
 	constructor(){
@@ -31,13 +32,17 @@ class CreateOrder extends Component{
 		return(
 			<div>
 				<h1>Create New Order</h1>
-				<form onSubmit={this.handleSubmit}>
-					<label>Title</label>
-					<input type='text' name='title' value={this.state.title} onChange={this.handleInput}/>
-					<label>Description</label>
-					<input ttpe='text' name='description' value={this.state.description} onChange={this.handleInput}/>
+				<Form onSubmit={this.handleSubmit}>
+					<FormGroup>
+				        <Label>Title</Label>
+				        <Input type='text' name='title' placeholder='Title' value={this.state.title} onChange={this.handleInput}/>
+			        </FormGroup>
+			        <FormGroup>
+				        <Label>Description</Label>
+				        <Input type='text' name='description' placeholder='Description' value={this.state.description} onChange={this.handleInput}/>
+			        </FormGroup>
 					<input type='submit'/>
-				</form>
+				</Form>
 			</div>
 		)
 	}

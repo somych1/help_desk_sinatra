@@ -1,11 +1,14 @@
 import React, {Component} from 'react'
+import { Card, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 
 const EmployeesIndex = (props) => {
 	const empList = props.employees.map((employee, i) => {
 		return(
-			<div key={employee.id} onClick={props.employeeOrders}>
-				<h3 id={employee.id}>{employee.name}</h3>
-			</div>
+			<Card key={employee.id} id={employee.id} onClick={props.employeeOrders}>
+        		<CardBody>
+		          	<CardTitle>{employee.name}</CardTitle>
+		        </CardBody>
+		    </Card>
 		)
 	})
 	return(

@@ -266,7 +266,7 @@ class EmployeeApp extends Component {
    }
 
   employeeOrders = async (e) => {
-    const id = e.target.id
+    const id = e.currentTarget.id
     // console.log(id, 'this is id in employeeOrders')
     const orders = await fetch('http://localhost:9292/orders/employee/' + id, {
       method: "GET",

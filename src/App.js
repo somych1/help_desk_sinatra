@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import DriverApp from './DriverApp'
 import EmployeeApp from './EmployeeApp'
+import { Button } from 'reactstrap';
 
 class App extends Component {
   constructor(){
@@ -25,11 +26,7 @@ class App extends Component {
       this.state.buttons 
       ?
       <div className="App"> 
-        <button id="driver" onClick={this.handleClick}>Driver</button>
-
-      
-
-        <button id="employee" onClick={this.handleClick}>Employee</button>
+        <Button outline color="primary" id="driver" onClick={this.handleClick}>Driver</Button> <Button outline color="primary" id="employee" onClick={this.handleClick}>Employee</Button>
       </div>
       :
       <div className="App">

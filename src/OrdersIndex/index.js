@@ -1,18 +1,21 @@
 import React from "react"
+import { Card, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 
 const OrdersIndex = (props) => {
 	const orders = props.orders
 	const ordersList = orders.map((order, i) => {
 		return(
-			<div key={order.id}  id={order.id} onClick={props.orderDetail}>
-				<h3>{order.title}</h3>
-				<h4>Status: {order.completed ? 'Complete' : 'In Progress'}</h4>
-			</div>
+			<Card key={order.id}  id={order.id} onClick={props.orderDetail}>
+        		<CardBody>
+		          	<CardTitle>{order.title}</CardTitle>
+		          	<CardSubtitle>Status: {order.completed ? 'Complete' : 'In Progress'}</CardSubtitle>
+		        </CardBody>
+		    </Card>
 		)
 	})
 	return(
 		<div>
-		<h1>{props.orders.length} Orders</h1>
+			<h1>{props.orders.length} Orders</h1>
 			{ordersList}
 		</div>
 	)

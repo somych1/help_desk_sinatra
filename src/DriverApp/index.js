@@ -147,7 +147,7 @@ class DriverApp extends Component {
   }
 
   // order detail
-  detail = async (e) => {
+  orderDetail = async (e) => {
     const id = e.currentTarget.id
     const order = await fetch('http://localhost:9292/orders/' + id, {
       method: 'GET',
@@ -176,13 +176,15 @@ class DriverApp extends Component {
     }
   }
 
+
+
   render() {
     return (
       <div>
         { this.state.loggedIn ?
           <div>
             <DriverNavigationBar createNewOrder={this.createNewOrder} homeButton={this.homeButton} logout={this.logout}/>
-            {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
+            {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} orderDetail={this.orderDetail}/>
               : <div>
                 {this.state.newOrder ? <CreateOrder manager={this.state.manager} createOrder={this.createOrder}/>
                 : <div>

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import './style.css'
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 class Employee extends Component{
 	constructor(){
@@ -41,30 +42,40 @@ class Employee extends Component{
 	}
 
 	handleSubmit = (e) => {
-		console.log(this.state.manager, 'this is manager in handleSubmit in employee')
+		console.log(this.state.registering, 'this is manager in handleSubmit in employee')
 		e.preventDefault();
 		if(this.state.registering) this.props.register(this.state.name, this.state.username, this.state.password, this.state.manager)
 		else this.props.login(this.state.username, this.state.password)
 	}
 	render(){
-		console.log(this.state.manager, 'this is manager in render() in employee')
+		console.log(this.state, 'this is state in render() in employee')
 		return(
 			<div>
-				<button className={this.state.registering ? "current" : null} className="button" onClick={this.registration}>Create new user</button>
-				<button className={this.state.registering ? null : "current"} className="button" onClick={this.login}>Login</button>
-				<form onSubmit={this.handleSubmit}>
-					<input className={this.state.registering ? null : 'hide'} type='text' name='name' placeholder='name' value={this.state.name} onChange={this.handleInput}/><br />
-					<input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.handleInput}/><br />
-					<input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleInput}/><br />
-					<label className={this.state.registering ? null : 'hide'}>Manager
-					<input
-            			name="manager"
-           				type="checkbox"
-           				checked={this.state.manager}
-            			onChange={this.handleInput} />
-            		</label><br />
-					<button className="button button-primary" type='submit'>Submit</button>
-				</form>
+				<Button outline color="primary" className={this.state.registering ? "current" : null} className="button" onClick={this.registration}>Registration</Button> <Button outline color="primary" className={this.state.registering ? null : "current"} className="button" onClick={this.login}>Login</Button><br />
+				<Form onSubmit={this.handleSubmit}>
+					<FormGroup className={this.state.registering ? null : 'hide'}>
+				        <Label>Name</Label>
+				        <Input type='text' name='name' placeholder='name' value={this.state.name} onChange={this.handleInput}/>
+			        </FormGroup>
+			        <FormGroup>
+				        <Label>Username</Label>
+				        <Input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.handleInput}/>
+			        </FormGroup>
+			        <FormGroup>
+			          	<Label>Password</Label>
+			          	<Input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleInput}/>
+			        </FormGroup>
+			        <FormGroup check>
+			          	<Label check  className={this.state.registering ? null : 'hide'}>
+			            	<Input name="manager"
+           						type="checkbox"
+           						checked={this.state.manager}
+            					onChange={this.handleInput} 
+            				/> Manager
+			          	</Label>
+			        </FormGroup>
+			        <Button outline color="primary">Submit</Button>
+				</Form>
 				{this.props.loginError != '' ? <p>{this.props.loginError}</p> : null}
 			</div>
 		)
