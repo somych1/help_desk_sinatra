@@ -17,10 +17,12 @@ class EmployeeApp extends Component {
       loginError: '',
       drivers: [],
       employees: [],
+      // employeeOrders: [],
       ordersIndex: true,
       newOrder: false,
       detail: false,
       employeesIndex: false
+      // employeeDetail: false
     }
   }
   login = async (username, password) => {
@@ -119,10 +121,19 @@ class EmployeeApp extends Component {
     })
   }
   homeButton = () => {
+    this.getOrders()
+      .then((orders) => {
+        this.setState({orders: orders.order})
+      })
+      .catch((err) => {
+        console.log(err);
+      })
     this.setState({
       ordersIndex: true,
       newOrder: false,
-      detail: false
+      detail: false,
+      employeesIndex: false,
+      employeeDetail: false
     })
   }
   getOrders = async () => {
@@ -135,7 +146,7 @@ class EmployeeApp extends Component {
     return orders
   }
   createNewOrder = () => {
-    this.state.newOrder ? this.setState({ordersIndex: true}) : this.setState({ordersIndex: false})
+    this.state.newOrder ? this.homeButton() : this.setState({ordersIndex: false})
     this.setState({
       newOrder: !this.state.newOrder
     })
@@ -213,13 +224,35 @@ class EmployeeApp extends Component {
 
   employeesIndex = () => {
     this.getEmployees()
-    this.state.employeesIndex ? this.setState({ordersIndex: true}) : this.setState({
+    this.state.employeesIndex ? this.homeButton() : this.setState({
       ordersIndex: false,
       newOrder: false,
-      detail: false
+      detail: false,
+      employeeDetail: true
     })
     this.setState({
       employeesIndex: !this.state.employeesIndex
+    })
+  }
+
+  orderDetail = () => {
+    console.log('this is orderDetail paaaage')
+  }
+
+  employeeOrders = async (e) => {
+    const id = e.target.id
+    // console.log(id, 'this is id in employeeOrders')
+    const orders = await fetch('http://localhost:9292/orders/employee/' + id, {
+      method: "GET",
+      credentials: 'include'
+    })
+    const response = await orders.json()
+    this.setState({
+      orders: response.orders,
+      ordersIndex: true,
+      newOrder: false,
+      detail: false,
+      employeesIndex: false
     })
   }
 
@@ -229,13 +262,13 @@ class EmployeeApp extends Component {
         { this.state.loggedIn ?
           <div>
             <EmployeeNavBar logout={this.logout} createNewOrder={this.createNewOrder} homeButton={this.homeButton} manager={this.state.manager} employeesIndex={this.employeesIndex}/>
-            {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} detail={this.detail}/>
+            {this.state.ordersIndex ? <OrdersIndex orders={this.state.orders} orderDetail={this.orderDetail}/>
               : <div>
                 {this.state.newOrder ? <EmployeeOrderCreate driversList={this.driversList} employeesList={this.employeesList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>
                 : <div>
                   {this.state.detail ? <OrderDetail order={this.state.order} empName={this.state.empName}/>
                   : <div>
-                    {this.state.employeesIndex ? <EmployeesIndex employees={this.state.employees}/> : null}
+                    {this.state.employeesIndex ? <EmployeesIndex employees={this.state.employees} employeeOrders={this.employeeOrders}/> : null}
                   </div>
                 }
                 </div>

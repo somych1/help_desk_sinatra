@@ -4,15 +4,15 @@ const OrdersIndex = (props) => {
 	const orders = props.orders
 	const ordersList = orders.map((order, i) => {
 		return(
-			<div key={order.id}>
+			<div key={order.id}  id={order.id} onClick={props.orderDetail}>
 				<h3>{order.title}</h3>
-				<h3>{order.completed}</h3>
-				<button id={order.id} onClick={props.detail}>Detail</button>
+				<h4>Status: {order.completed ? 'Complete' : 'In Progress'}</h4>
 			</div>
 		)
 	})
 	return(
 		<div>
+		<h1>{props.orders.length} Orders</h1>
 			{ordersList}
 		</div>
 	)
