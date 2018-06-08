@@ -5,14 +5,19 @@ import OrdersIndex from '../OrdersIndex'
 import EmployeeOrderDetail from '../EmployeeOrderDetail'
 import Employee from '../Employee'
 import EmployeesIndex from '../EmployeesIndex'
+import OrderEdit from '../OrderEdit'
 
 
 class EmployeeApp extends Component {
   constructor(){
     super(),
     this.state = {
+      truckNum: '',
+      order: [],
+      title: [],
       empName: '',
       orders: [],
+      editError: '',
       manager: false,
       loggedIn: false,
       loginError: '',
@@ -21,7 +26,8 @@ class EmployeeApp extends Component {
       ordersIndex: true,
       newOrder: false,
       detail: false,
-      employeesIndex: false
+      employeesIndex: false,
+      orderToEdit: false
     }
   }
   login = async (username, password) => {
@@ -34,7 +40,7 @@ class EmployeeApp extends Component {
       })
     })
     const loginResponse = await empLogin.json()
-    console.log(loginResponse, 'this is loginResponse')
+    // console.log(loginResponse, 'this is loginResponse')
     if(loginResponse.success){
       this.setState({
         loggedIn: true,
@@ -119,6 +125,7 @@ class EmployeeApp extends Component {
       employeesIndex: false
     })
   }
+
   homeButton = () => {
     this.getOrders()
       .then((orders) => {
@@ -135,15 +142,17 @@ class EmployeeApp extends Component {
       employeeDetail: false
     })
   }
+
   getOrders = async () => {
     const allOrders = await fetch('http://localhost:9292/orders', {
       method: 'GET',
       credentials: 'include'
     })
     const orders = await allOrders.json()
-    console.log(orders, 'this is response in getOrders')
+    // console.log(orders, 'this is response in getOrders')
     return orders
   }
+
   createNewOrder = () => {
     this.state.newOrder ? this.homeButton() : this.setState({ordersIndex: false})
     this.setState({
@@ -151,19 +160,19 @@ class EmployeeApp extends Component {
     })
     this.getDrivers()
     this.getEmployees()
-
   }
+
   getDrivers = async () => {
-      const allDrivers = await fetch('http://localhost:9292/driver', {
-          method: 'GET',
-          credentials: 'include'
-      })
-      const response = await allDrivers.json()
-      console.log(response, 'this is allDrivers in getDrivers')
-      this.setState({
-          drivers: response.drivers
-      })
-    }
+    const allDrivers = await fetch('http://localhost:9292/driver', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    const response = await allDrivers.json()
+    console.log(response, 'this is allDrivers in getDrivers')
+    this.setState({
+        drivers: response.drivers
+    })
+  }
 
   driversList = () => {
     const drivers = this.state.drivers.map((driver, i) => {
@@ -175,28 +184,30 @@ class EmployeeApp extends Component {
     })
     return drivers
   }
+  
   getEmployees = async () => {
-      const employees = await fetch('http://localhost:9292/emp', {
-          method: 'GET',
-          credentials: 'include'
-      })
-        const response = await employees.json()
-      this.setState({
-          employees: response.employees
-      })
-    }
+    const employees = await fetch('http://localhost:9292/emp', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    const response = await employees.json()
+    this.setState({
+        employees: response.employees
+    })
+    console.log(this.state.employees, 'this is employeeeeeeeeeeees in getEmployees')
+  }
     
-    employeesList = () => {
-      console.log(this.state.employees, 'this is employeeeeeeeeeeees')
-      const employees = this.state.employees.map((employee, i) => {
-        return(
-          <option key={employee.id} value={employee.id}>
-            {employee.name}
-          </option>
-        )
-      })
-      return employees
-    }
+  employeesList = () => {
+    console.log(this.state.employees, 'this is employeeeeeeeeeeees in employeesList')
+    const employees = this.state.employees.map((employee, i) => {
+      return(
+        <option key={employee.id} value={employee.id}>
+          {employee.name}
+        </option>
+      )
+    })
+    return employees
+  }
 
   createOrder = async (title, description, truck, employee) => {
     console.log(employee, 'this is employeeId in createOrder')
@@ -205,6 +216,7 @@ class EmployeeApp extends Component {
       credentials: 'include',
       body: JSON.stringify({
         title: title,
+        completed: false,
         description: description,
         driver_id: truck,
         employee_id: employee
@@ -241,9 +253,10 @@ class EmployeeApp extends Component {
       credentials: 'include'
     })
     const response = await order.json()
-    console.log(response, 'this is response in detail')
+    // console.log(response, 'this is response in detail')
     this.setState({
       order: response.order,
+      title: response.order.title,
       detail: true,
       ordersIndex: false,
       newOrder: false,
@@ -256,14 +269,14 @@ class EmployeeApp extends Component {
         credentials: 'include'
       })
       const empResponse = await employee.json()
-      console.log(empResponse, ' this is empResponse in orderDetail')
+      // console.log(empResponse, ' this is empResponse in orderDetail')
       if (empResponse.success){
         this.setState({
           empName: empResponse.employee.name
         })
       } 
     }
-   }
+  }
 
   employeeOrders = async (e) => {
     const id = e.currentTarget.id
@@ -282,8 +295,59 @@ class EmployeeApp extends Component {
     })
   }
 
+  openEditOrder = () => {
+    // console.log('this is editOrder function in EmployeeApp')
+    this.setState({
+      orderToEdit: true,
+      ordersIndex: false,
+      newOrder: false,
+      detail: false,
+      employeesIndex: false
+    })
+    this.getEmployees()
+  }
+
+  editedOrderByManager = async (description, status, employee, comment, id) => {
+    const order = await fetch('http://localhost:9292/orders/' + id, {
+      method: "PUT",
+      credentials: 'include',
+      body: JSON.stringify({
+        description: description,
+        completed: status,
+        employee_id: employee,
+        comment: comment
+      })
+    })
+    const response = await order.json()
+    if(response.success){
+      this.homeButton()
+      this.setState({
+        editError: ''
+      })
+    } else {
+      this.setState({
+        editError: response.message
+      })
+    }
+  }
+
+  editedOrderByEmpl = async (status, comment, id) => {
+    const order = await fetch('http://localhost:9292/orders/' + id, {
+      method: "PUT",
+      credentials: 'include',
+      body: JSON.stringify({
+        completed: status,
+        comment: comment
+      })
+    })
+    const response = await order.json()
+    console.log(response, 'this is response in editedOrderByManager')
+    this.homeButton()
+  }
+
+  
+
   render() {
-    console.log(this.state, 'this is state in EmployeeApp')
     return (
       <div>
         { this.state.loggedIn ?
@@ -293,9 +357,13 @@ class EmployeeApp extends Component {
               : <div>
                 {this.state.newOrder ? <EmployeeOrderCreate driversList={this.driversList} employeesList={this.employeesList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>
                 : <div>
-                  {this.state.detail ? <EmployeeOrderDetail order={this.state.order} empName={this.state.empName}/>
+                  {this.state.detail ? <EmployeeOrderDetail order={this.state.order} empName={this.state.empName} openEditOrder={this.openEditOrder} />
                   : <div>
-                    {this.state.employeesIndex ? <EmployeesIndex employees={this.state.employees} employeeOrders={this.employeeOrders}/> : null}
+                    {this.state.employeesIndex ? <EmployeesIndex employees={this.state.employees} employeeOrders={this.employeeOrders}/>
+                    : <div>
+                      {this.state.orderToEdit ? <OrderEdit editError={this.state.editError} employeesList={this.employeesList} order={this.state.order} editedOrderByManager={this.editedOrderByManager} editedOrderByEmpl={this.editedOrderByEmpl} manager={this.state.manager}/> : null}
+                    </div>
+                  }
                   </div>
                 }
                 </div>

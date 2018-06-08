@@ -14,7 +14,7 @@ class App extends Component {
   }
 
   handleClick = (e) => {
-    console.log(e.currentTarget.id)
+    // console.log(e.currentTarget.id)
     this.setState({
       buttons: false,
       whichApp: e.currentTarget.id

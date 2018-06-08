@@ -41,7 +41,7 @@ class CreateOrder extends Component{
 				        <Label>Description</Label>
 				        <Input type='text' name='description' placeholder='Description' value={this.state.description} onChange={this.handleInput}/>
 			        </FormGroup>
-					<input type='submit'/>
+					<Button outline color="primary">Submit</Button>
 				</Form>
 			</div>
 		)

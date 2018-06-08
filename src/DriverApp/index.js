@@ -122,7 +122,6 @@ class DriverApp extends Component {
     this.setState({
       newOrder: !this.state.newOrder
     })
-    // !this.state.newOrder ? this.setState({ordersIndex: true}) : null
 
   }
 
@@ -132,7 +131,9 @@ class DriverApp extends Component {
       credentials: 'include',
       body: JSON.stringify({
         title: title,
-        description: description
+        description: description,
+        completed: false,
+        comment: 'new repair'
       })
     })
     const response = await newOrder.json()

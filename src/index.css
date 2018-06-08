@@ -5,6 +5,10 @@ body {
   font-family: sans-serif;
 }
 
+#driver, #employee {
+	margin-top: 40%;
+}
+
 /*.nav {
 	background-color: white;
 	width: 80%;

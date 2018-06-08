@@ -4,8 +4,8 @@ import { Card, CardImg, CardText, CardBody, CardLink, CardTitle, CardSubtitle } 
 class EmployeeOrderDetail extends Component {
 	render(){
 		return(
-			<Card>
-		        <CardBody>
+			<Card onClick={this.props.openEditOrder}>
+		        <CardBody onClick={this.props.openEditOrder}>
 		            <CardTitle>ORDER #{this.props.order.id}</CardTitle>
 		            <CardSubtitle>TITLE: {this.props.order.title}</CardSubtitle>
 		        </CardBody>
