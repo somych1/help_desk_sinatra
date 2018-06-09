@@ -16,6 +16,7 @@ class EmployeeApp extends Component {
       order: [],
       title: [],
       empName: '',
+      truck: '',
       orders: [],
       editError: '',
       manager: false,
@@ -253,7 +254,7 @@ class EmployeeApp extends Component {
       credentials: 'include'
     })
     const response = await order.json()
-    // console.log(response, 'this is response in detail')
+    console.log(response, 'this is response in detail')
     this.setState({
       order: response.order,
       title: response.order.title,
@@ -263,6 +264,7 @@ class EmployeeApp extends Component {
       employeesIndex: false
     })
     const employeeId = response.order.employee_id
+    const truckId = response.order.driver_id
     if (response.success && employeeId) {
       const employee = await fetch('http://localhost:9292/emp/' + employeeId, {
         method: 'GET',
@@ -275,6 +277,20 @@ class EmployeeApp extends Component {
           empName: empResponse.employee.name
         })
       } 
+    }
+    console.log(truckId, 'this is truckId in orderDetail')
+    if (response.success && truckId){
+      const driver = await fetch('http://localhost:9292/driver/' + truckId, {
+          method: 'GET',
+          credentials: 'include'
+      })
+      const driverResponse = await driver.json()
+      console.log(driverResponse, 'this is driverResponse in orderDetail')
+      if (driverResponse.success){
+        this.setState({
+            truckNum: driverResponse.truck
+        })
+      }
     }
   }
 
@@ -345,7 +361,14 @@ class EmployeeApp extends Component {
     this.homeButton()
   }
 
-  
+  deleteOrder = async (e) => {
+    const id = e.currentTarget.id
+    const order =  await fetch('http://localhost:9292/orders/' + id, {
+      method: "DELETE",
+      credentials: 'include'
+    })
+    this.homeButton()
+  }
 
   render() {
     return (
@@ -357,7 +380,7 @@ class EmployeeApp extends Component {
               : <div>
                 {this.state.newOrder ? <EmployeeOrderCreate driversList={this.driversList} employeesList={this.employeesList} manager={this.state.manager} drivers={this.state.drivers} createOrder={this.createOrder}/>
                 : <div>
-                  {this.state.detail ? <EmployeeOrderDetail order={this.state.order} empName={this.state.empName} openEditOrder={this.openEditOrder} />
+                  {this.state.detail ? <EmployeeOrderDetail manager={this.state.manager} deleteOrder={this.deleteOrder} order={this.state.order} truckNum={this.state.truckNum} empName={this.state.empName} openEditOrder={this.openEditOrder} />
                   : <div>
                     {this.state.employeesIndex ? <EmployeesIndex employees={this.state.employees} employeeOrders={this.employeeOrders}/>
                     : <div>

@@ -1,30 +1,29 @@
 import React, {Component} from 'react' 
-import { Card, CardImg, CardText, CardBody, CardLink, CardTitle, CardSubtitle } from 'reactstrap';
+import { Card, CardText, CardBody, CardTitle, CardSubtitle, Button } from 'reactstrap';
 
 class EmployeeOrderDetail extends Component {
 	render(){
 		return(
-			<Card onClick={this.props.openEditOrder}>
+			<Card>
 		        <CardBody onClick={this.props.openEditOrder}>
 		            <CardTitle>ORDER #{this.props.order.id}</CardTitle>
-		            <CardSubtitle>TITLE: {this.props.order.title}</CardSubtitle>
-		        </CardBody>
-		        <CardBody>
-		            <CardText>DESCRIPTION: {this.props.order.description}</CardText>
+		            <CardSubtitle>Truck Number: {this.props.truckNum}</CardSubtitle>
 		            <CardText>STATUS: {this.props.order.completed ? 'Completed' : 'In Progress'}</CardText>
+		        </CardBody>
+		        <CardBody onClick={this.props.openEditOrder}>
+		            <CardText>TITLE: {this.props.order.title}</CardText>
+		            <CardText>DESCRIPTION: {this.props.order.description}</CardText>
+		            <CardText>Employee: {this.props.empName}</CardText>
 		            <CardText>COMMENT: {this.props.order.comment}</CardText>
 		        </CardBody>
+		        {this.props.manager ?
+		    		<Button id={this.props.order.id} onClick={this.props.deleteOrder}>Delete</Button>
+		    		:
+		    		null
+		    	}
 		    </Card>
 		)
 	}
 }
 
 export default EmployeeOrderDetail
-			// <div>
-			// 	<h1>ORDER #{this.props.order.id}</h1>
-			// 	<h3>TITLE: {this.props.order.title}</h3>
-			// 	<h3>DESCRIPTION: {this.props.order.description}</h3>
-			// 	<h3>STATUS: {this.props.order.completed ? 'Completed' : 'In Progress'}</h3>
-			// 	<h3>EMPLOYEE: {this.props.empName}</h3>
-			// 	<h3>COMMENT: {this.props.order.comment}</h3>
-			// </div>
