@@ -42,13 +42,11 @@ class Employee extends Component{
 	}
 
 	handleSubmit = (e) => {
-		// console.log(this.state.registering, 'this is manager in handleSubmit in employee')
 		e.preventDefault();
 		if(this.state.registering) this.props.register(this.state.name, this.state.username, this.state.password, this.state.manager)
 		else this.props.login(this.state.username, this.state.password)
 	}
 	render(){
-		// console.log(this.state, 'this is state in render() in employee')
 		return(
 			<div>
 				<Button outline color="primary" className={this.state.registering ? "current" : null} className="button" onClick={this.registration}>Registration</Button> <Button outline color="primary" className={this.state.registering ? null : "current"} className="button" onClick={this.login}>Login</Button><br />

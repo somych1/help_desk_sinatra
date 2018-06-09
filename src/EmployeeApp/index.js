@@ -112,7 +112,6 @@ class EmployeeApp extends Component {
     const empLogout = await fetch('http://localhost:9292/emp/logout', {
         method: 'GET'
     });
-    const logoutResponse = await empLogout.json();
     this.setState({
       orders: [],
       manager: false,
@@ -394,7 +393,7 @@ class EmployeeApp extends Component {
               </div>
             }
           </div>
-          : <Employee login={this.login} register={this.register}/>
+          : <Employee login={this.login} register={this.register} loginError={this.state.loginError}/>
         }
       </div>
     );

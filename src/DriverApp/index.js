@@ -195,7 +195,7 @@ class DriverApp extends Component {
               </div>
             }
           </div>
-          : <Driver login={this.login} register={this.register}/>
+          : <Driver loginError={this.state.loginError} login={this.login} register={this.register}/>
         }
       </div>
     );
